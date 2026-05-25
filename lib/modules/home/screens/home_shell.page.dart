@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:jigyasa/modules/home/screens/homefeed.page.dart';
-import 'package:jigyasa/modules/home/screens/favourites.page.dart';
 import 'package:jigyasa/modules/profile/screens/profile.page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jigyasa/state/notifications_cubit.dart';
 import 'package:jigyasa/state/notifications_state.dart';
 import 'package:jigyasa/common/widgets/bottom_nav_bar.widget.dart';
+import 'package:jigyasa/modules/ideas/screens/create_idea.page.dart';
+import 'package:jigyasa/modules/ideas/cubit/ideas_cubit.dart';
 
 class HomeShellPage extends StatefulWidget {
   const HomeShellPage({super.key});
@@ -23,8 +24,11 @@ class _HomeShellPageState extends State<HomeShellPage> {
     const HomeFeedPage(), // home
     // explore (placeholder)
     const Center(child: Text('Explore - Coming soon')),
-    // create (placeholder)
-    const Center(child: Text('Create - Coming soon')),
+    // create
+    BlocProvider(
+      create: (_) => IdeasCubit(),
+      child: const CreateIdeaPage(),
+    ),
     // collab (placeholder)
     const Center(child: Text('Collab - Coming soon')),
     const ProfilePage(), // profile

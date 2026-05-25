@@ -24,3 +24,19 @@ class IdeasError extends IdeasState {
   @override
   List<Object?> get props => [message];
 }
+
+class IdeaCreateLoading extends IdeasState {}
+
+class IdeaCreateSuccess extends IdeasState {
+  final Idea idea;
+  const IdeaCreateSuccess(this.idea);
+  @override
+  List<Object?> get props => [idea];
+}
+
+class IdeaCreateError extends IdeasState {
+  final String message;
+  const IdeaCreateError(this.message);
+  @override
+  List<Object?> get props => [message];
+}

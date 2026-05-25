@@ -10,6 +10,7 @@ class User {
   final int joinedYear;
   final int ideasCount;
   final int collaboratorsCount;
+  final String? profession;
 
   User({
     required this.id,
@@ -23,6 +24,7 @@ class User {
     required this.joinedYear,
     required this.ideasCount,
     required this.collaboratorsCount,
+    this.profession
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -34,12 +36,14 @@ class User {
       profile: json['profile'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       role: json['role'] as String,
-      ideas: (json['ideas'] as List<dynamic>)
-          .map((e) => Idea.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      ideas:
+          (json['ideas'] as List<dynamic>)
+              .map((e) => Idea.fromJson(e as Map<String, dynamic>))
+              .toList(),
       joinedYear: json['joinedYear'] as int,
       ideasCount: json['ideasCount'] as int,
       collaboratorsCount: json['collaboratorsCount'] as int,
+      profession: json['profession'] as String?,
     );
   }
 
@@ -56,6 +60,7 @@ class User {
       'joinedYear': joinedYear,
       'ideasCount': ideasCount,
       'collaboratorsCount': collaboratorsCount,
+      'profession': profession,
     };
   }
 }

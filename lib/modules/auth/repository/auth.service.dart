@@ -50,13 +50,23 @@ class AuthService {
     required String username,
     required String email,
     required String password,
+    required String profession,
   }) async {
+    // Debug: print request fields (avoid printing password)
+    try {
+      // ignore: avoid_print
+      print(
+        'AuthService.signup - name: "$fullName", username: "$username", email: "$email", profession: "$profession"',
+      );
+    } catch (_) {}
+
     final res = await _repo.signup(
       SignupRequest(
         fullName: fullName,
         username: username,
         email: email,
         password: password,
+        profession: profession,
       ),
     );
     if (res.accessToken.isNotEmpty) {

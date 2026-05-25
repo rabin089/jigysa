@@ -29,4 +29,15 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
+
+
+  Future<void> updateProfile({required Map<String, dynamic> data}) async {
+    try {
+      emit(ProfileLoading());
+      final user = await _repository.updateProfile(data: data);
+      emit(ProfileLoaded(user));  
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
 }

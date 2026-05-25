@@ -111,12 +111,14 @@ class ApiClient {
     String path, {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? data,
+    Options? options,
   }) async {
     try {
       return await _dio.patch(
         path,
         queryParameters: queryParameters,
         data: data,
+        options: options,
       );
     } on DioException catch (e) {
       if (e.response != null) {

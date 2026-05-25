@@ -13,7 +13,7 @@ class ProfileRepository {
       try {
         final token = await storageInstance.getData(key: 'accessToken');
         debugPrint(
-          'ProfileRepository.getProfile - token present: ${token != null && token.isNotEmpty}',
+          'ProfileRepository.updateProfile - token present: ${token != null && token.isNotEmpty}',
         );
       } catch (_) {}
 
@@ -58,6 +58,56 @@ class ProfileRepository {
     } catch (e) {
       // Handle other errors
       debugPrint('Error in getProfile: $e');
+      throw Exception('Something went wrong: $e');
+    }
+  }
+
+  Future<User> updateProfile({required Map<String, dynamic> data}) async {
+
+
+    try {
+      try {
+        final token = await storageInstance.getData(key: 'accessToken');
+        debugPrint(
+          'ProfileRepository.getProfile - token present: ${token != null && token.isNotEmpty}',
+        );
+      } catch (_) {}
+
+      // Use validateStatus to capture non-2xx responses for debugging (temporary)
+      // Also attach an extra barrier token header (X-Barrier-Token) as requested.
+      String? tokenValue;
+      try {
+        final t = await storageInstance.getData(key: 'accessToken');
+        if (t != null && t.startsWith('Bearer ')) {
+          tokenValue = t.substring(7);
+        } else {
+          tokenValue = t;
+        }
+      } catch (_) {
+        tokenValue = null;
+      }
+      final response = await apiClient.patch(
+        ApiUrl.updateUserProfile,
+        data: data,
+        options: Options(
+          validateStatus: (status) => true,
+          headers: tokenValue != null ? {'X-Barrier-Token': tokenValue} : null,
+        ),
+      );
+      debugPrint('Profile API response status: ${response.statusCode}');
+      debugPrint('Profile API response data: ${response.data}');
+      if(response.statusCode == 200){
+        return User.fromJson(response.data);
+      }else{
+        throw Exception(
+          'Failed to update profile - status: ${response.statusCode}, body: ${response.data}',
+        );
+        
+        }
+      
+    } on DioException catch (e) {
+      throw Exception('Dio error: ${e.message}');
+    } catch (e) {
       throw Exception('Something went wrong: $e');
     }
   }

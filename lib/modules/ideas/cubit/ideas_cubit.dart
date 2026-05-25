@@ -17,4 +17,14 @@ class IdeasCubit extends Cubit<IdeasState> {
       emit(IdeasError(e.toString()));
     }
   }
+
+  Future<void> createIdea(Map<String, dynamic> payload) async {
+    emit(IdeaCreateLoading());
+    try {
+      final idea = await _repo.createIdea(payload);
+      emit(IdeaCreateSuccess(idea));
+    } catch (e) {
+      emit(IdeaCreateError(e.toString()));
+    }
+  }
 }

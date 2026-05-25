@@ -5,6 +5,7 @@ import '../models/idea.dart';
 
 abstract class IdeasRepository {
   Future<List<Idea>> getAllIdeas();
+  Future<Idea> createIdea(Map<String, dynamic> payload);
 }
 
 class IdeasRepositoryImpl implements IdeasRepository {
@@ -27,5 +28,16 @@ class IdeasRepositoryImpl implements IdeasRepository {
       }
     }
     return <Idea>[];
+  }
+
+  @override
+  Future<Idea> createIdea(Map<String, dynamic> payload) async {
+    final res = await _dio.post(ApiUrl.createIdea, data: payload);
+    final data = res.data;
+    if (data is Map<String, dynamic>) {
+      final obj = data['data'] is Map<String, dynamic> ? data['data'] as Map<String, dynamic> : data;
+      return Idea.fromJson(Map<String, dynamic>.from(obj));
+    }
+    throw Exception('Invalid response while creating idea');
   }
 }

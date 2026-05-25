@@ -7,12 +7,13 @@ class ApiUrl {
 
   //auth
   static String loginApi = "/auth/login";
-  static String signupApi = "/auth/signup";
+  static String signupApi = "/auth/register";
   static String oAuthLogin = '/auth/verify/google';
   static String oAuthAppleLogin = "/auth/verify/apple";
 
   ///user-profile
   static String getUserProfile = "/user/me";
+  static String updateUserProfile ="/user/me/profile";
 
   //ideas
   static String getAllIdeas = "/ideas/all";
@@ -22,4 +23,9 @@ class ApiUrl {
   static String getMyIdeas = "/ideas/mine";
 
   ///comments
+
+
+
+  ///uploads
+  static String uploadFile = "/uploads/sign";
 }

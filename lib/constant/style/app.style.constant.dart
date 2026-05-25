@@ -89,7 +89,7 @@ class AppTheme {
       ),
 
       // ✅ Cards (like info containers)
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 2,

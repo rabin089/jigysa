@@ -18,18 +18,12 @@ class _CreateAccountPageState extends State<SignUpPage> {
   final _emailCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _confirmPasswordCtrl = TextEditingController();
+  final _professionController = TextEditingController();
 
   bool _obscurePwd = true;
   bool _obscureConfirmPwd = true;
   bool _isSubmitting = false;
   bool _agree = false;
-  String? _role;
-  final List<String> _roles = const [
-    'Product Designer',
-    'Software Engineer',
-    'Product Manager',
-    'Data Scientist',
-  ];
 
   @override
   void dispose() {
@@ -51,18 +45,20 @@ class _CreateAccountPageState extends State<SignUpPage> {
         username: _usernameCtrl.text.trim(),
         email: _emailCtrl.text.trim(),
         password: _passwordCtrl.text,
+        profession: _professionController.text.trim(),
       );
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created!')),
-      );
-      // Optionally navigate to login after signup
-      // Navigator.pop(context);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Account created!')));
+      await Future.delayed(const Duration(milliseconds: 600));
+      if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Failed: $e')));
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -331,26 +327,36 @@ class _CreateAccountPageState extends State<SignUpPage> {
                         const SizedBox(height: 22),
 
                         // Role (optional)
-                        const Text('Role (optional)'),
+                        const Text('Profession'),
                         const SizedBox(height: 8),
-                        DropdownButtonFormField<String>(
-                          value: _role,
-                          items: _roles
-                              .map(
-                                (e) => DropdownMenuItem<String>(
-                                  value: e,
-                                  child: Text(e),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (v) => setState(() => _role = v),
-                          isExpanded: true,
+                        TextFormField(
+                          controller: _professionController,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) => _onSubmit(),
                           decoration: _fieldDecoration(
                             hint: 'Product Designer',
-                            icon: Icons.work_outline,
+                            icon: Icons.lock_outline,
                           ).copyWith(
-                            suffixIcon: const Icon(Icons.expand_more),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureConfirmPwd
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed:
+                                  () => setState(
+                                    () =>
+                                        _obscureConfirmPwd =
+                                            !_obscureConfirmPwd,
+                                  ),
+                            ),
                           ),
+                          validator: (v) {
+                            if ((v ?? '').isEmpty) {
+                              return 'Please enter your profession';
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 12),
 
@@ -360,9 +366,11 @@ class _CreateAccountPageState extends State<SignUpPage> {
                           children: [
                             Checkbox(
                               value: _agree,
-                              onChanged: (v) => setState(() => _agree = v ?? false),
+                              onChanged:
+                                  (v) => setState(() => _agree = v ?? false),
                               activeColor: const Color(0xFF4F8BFF),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                             ),
                             const SizedBox(width: 4),
                             Expanded(
@@ -371,9 +379,21 @@ class _CreateAccountPageState extends State<SignUpPage> {
                                   style: TextStyle(color: Colors.black87),
                                   children: [
                                     TextSpan(text: 'I agree to the '),
-                                    TextSpan(text: 'Terms', style: TextStyle(color: Color(0xFF4F8BFF), fontWeight: FontWeight.w600)),
+                                    TextSpan(
+                                      text: 'Terms',
+                                      style: TextStyle(
+                                        color: Color(0xFF4F8BFF),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
                                     TextSpan(text: ' and '),
-                                    TextSpan(text: 'Privacy', style: TextStyle(color: Color(0xFF4F8BFF), fontWeight: FontWeight.w600)),
+                                    TextSpan(
+                                      text: 'Privacy',
+                                      style: TextStyle(
+                                        color: Color(0xFF4F8BFF),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -439,7 +459,12 @@ class _CreateAccountPageState extends State<SignUpPage> {
                                   recognizer:
                                       TapGestureRecognizer()
                                         ..onTap = () {
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => LoginPage(),
+                                            ),
+                                          );
                                         },
                                 ),
                               ],
