@@ -3,6 +3,8 @@ import 'package:jigyasa/constant/sizedbox/sized_box.constants.dart';
 import 'package:jigyasa/modules/auth/repository/auth.service.dart';
 import 'package:jigyasa/modules/auth/screen/sign_up.page.dart';
 import 'package:jigyasa/modules/home/screens/home_shell.page.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -47,6 +49,57 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login failed: $e')),
       );
+    } finally {
+      if (mounted) setState(() => _isSubmitting = false);
+    }
+  }
+
+  Future<void> _onGoogleLogin() async {
+    setState(() => _isSubmitting = true);
+    try {
+      final GoogleSignInAccount googleUser = await GoogleSignIn.instance.authenticate();
+      final String? idToken = googleUser.authentication.idToken;
+      
+      final OAuthCredential credential = GoogleAuthProvider.credential(
+        idToken: idToken,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final String? firebaseIdToken = await userCredential.user?.getIdToken();
+      
+      if (firebaseIdToken != null) {
+        await authService.googleLogin(firebaseIdToken);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Logged in with Google successfully')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeShellPage()),
+        );
+      } else {
+        throw Exception('Failed to get Firebase ID token.');
+      }
+    } on GoogleSignInException catch (e) {
+      if (!mounted) return;
+      if (e.code != 'canceled' && e.code != 'interrupted') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Google Login failed: ${e.code}')),
+        );
+      }
+      try {
+        await GoogleSignIn.instance.signOut();
+        await FirebaseAuth.instance.signOut();
+      } catch (_) {}
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Google Login failed: $e')),
+      );
+      try {
+        await GoogleSignIn.instance.signOut();
+        await FirebaseAuth.instance.signOut();
+      } catch (_) {}
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
     }
@@ -277,7 +330,7 @@ class _LoginPageState extends State<LoginPage> {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: OutlinedButton.icon(
-                                    onPressed: () {},
+                                    onPressed: _isSubmitting ? null : _onGoogleLogin,
                                     icon: const Icon(Icons.g_mobiledata, color: Colors.black87),
                                     label: const Text('Google', style: TextStyle(color: Colors.black87)),
                                     style: OutlinedButton.styleFrom(

@@ -26,4 +26,12 @@ class AuthRepositoryImpl implements AuthRepository {
         ? res.data as Map<String, dynamic>
         : <String, dynamic>{});
   }
+
+  @override
+  Future<AuthResponse> googleLogin(String idToken) async {
+    final res = await _dio.post(ApiUrl.googleLogin, data: {'idToken': idToken});
+    return AuthResponse.fromJson(res.data is Map<String, dynamic>
+        ? res.data as Map<String, dynamic>
+        : <String, dynamic>{});
+  }
 }

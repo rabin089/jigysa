@@ -10,6 +10,7 @@ class ApiUrl {
   static String signupApi = "/auth/register";
   static String oAuthLogin = '/auth/verify/google';
   static String oAuthAppleLogin = "/auth/verify/apple";
+  static String googleLogin = "/auth/google";
 
   ///user-profile
   static String getUserProfile = "/user/me";

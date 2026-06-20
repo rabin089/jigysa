@@ -82,6 +82,22 @@ class AuthService {
     }
     return res;
   }
+
+  Future<AuthResponse> googleLogin(String idToken) async {
+    final res = await _repo.googleLogin(idToken);
+    if (res.accessToken.isNotEmpty) {
+      await _storage.saveToken(res.accessToken);
+      if (res.user != null) {
+        await _storage.saveUserProfile(
+          id: res.user!.id,
+          email: res.user!.email,
+          name: res.user!.name,
+          username: res.user!.username,
+        );
+      }
+    }
+    return res;
+  }
 }
 
 AuthService get authService => AuthService();

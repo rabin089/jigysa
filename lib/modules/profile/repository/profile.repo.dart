@@ -43,7 +43,11 @@ class ProfileRepository {
       debugPrint('Profile API response data: ${response.data}');
 
       if (response.statusCode == 200) {
-        return User.fromJson(response.data);
+        if (response.data is Map<String, dynamic>) {
+          return User.fromJson(response.data as Map<String, dynamic>);
+        } else {
+          throw Exception('Backend returned empty or invalid JSON. Response: "${response.data}"');
+        }
       } else {
         throw Exception(
           'Failed to load profile - status: ${response.statusCode}, body: ${response.data}',
