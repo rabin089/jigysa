@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "435028376050",
+    "project_id": "jigyasa-b7499",
+    "storage_bucket": "jigyasa-b7499.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:435028376050:android:d219f7fb0fa1171020536b",
+        "android_client_info": {
+          "package_name": "com.example.jigyasa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "435028376050-4qdfmblbt6n1pq9bqg20mgbu7gkesb1r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jigyasa",
+            "certificate_hash": "05d5c7a2bcb400a20e60bd8438e590a2b712410a"
+          }
+        },
+        {
+          "client_id": "435028376050-q0hs82s8lrvqtkrlfjbeedchllg81qc7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBY5gSojtBx_yc0tvObnRPemxLp9rg50Wo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "435028376050-q0hs82s8lrvqtkrlfjbeedchllg81qc7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "435028376050-tkva2db3vqct8866cakf7vg397g2tb1a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.jigyasa"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
